@@ -33,7 +33,9 @@ export class AuthLoginPresenter extends PickType(UserBaseData, [
   'refreshToken',
 ] as const) {}
 
-export class UserLogoutRespDto {
+export class UserLogoutPresenter {
   @ApiProperty({ example: 'Logou Success', description: 'userlogout message' })
   readonly message: string;
 }
+
+export class UserRefreshPresenter {}

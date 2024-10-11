@@ -11,7 +11,7 @@ interface JwtTokenOperations {
     { id, email }: JwtPayload,
     secret: string,
     expiresIn: string,
-  ): { expirationDate: Date; token: string };
+  ): string;
   verifyToken(token: string, secret: string): Promise<unknown>;
 }
 
@@ -27,7 +27,6 @@ export class JwtTokenAdapter implements JwtTokenOperations {
       const verified = await this.jwtService.verifyAsync(token, {
         secret,
       });
-      console.log('VERIFIED', verified);
       const { payload, exp } = verified;
       const { id, email } = payload || verified;
       const expirationDate = new Date(exp * 1000);
@@ -38,15 +37,8 @@ export class JwtTokenAdapter implements JwtTokenOperations {
     }
   }
 
-  createToken(
-    payload: JwtPayload,
-    secret: string,
-    expiresIn: string,
-  ): { expirationDate: Date; token: string } {
+  createToken(payload: JwtPayload, secret: string, expiresIn: string): string {
     const token = this.jwtService.sign(payload, { secret, expiresIn });
-    const decoded = this.jwtService.decode(token);
-
-    const expirationDate = new Date(decoded.exp * 1000);
-    return { expirationDate, token };
+    return token;
   }
 }

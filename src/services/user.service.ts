@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EnvConfigService } from 'src/config/env-config.service';
+import { EnvConfigService } from 'src/config/env/env-config.service';
 import { UserRepository } from 'src/repositories/user.repository';
 // import * as bcrypt from 'bcrypt';
 // import * as jwt from 'jsonwebtoken';
@@ -75,11 +75,21 @@ export class UserServise {
       id: newUser._id.toString(),
       email: newUser.email,
     };
-    const { access, refresh } = await this.createTokens(payload);
+
+    const accessToken = await this.jwtTokenAdapter.createToken(
+      payload,
+      this.envConfig.getJwtAccessSecret(),
+      this.envConfig.getJwtAccessExpirationTime(),
+    );
+    const refreshToken = await this.jwtTokenAdapter.createToken(
+      payload,
+      this.envConfig.getJwtRefreshSecret(),
+      this.envConfig.getJwtRefreshExpirationTime(),
+    );
 
     const updatedUser = await this.userRepository.updateById(newUser._id, {
-      accessToken: access.token,
-      refreshToken: refresh.token,
+      accessToken,
+      refreshToken,
     });
 
     return updatedUser;
@@ -108,11 +118,20 @@ export class UserServise {
       id: user._id.toString(),
       email: user.email,
     };
-    const { access, refresh } = await this.createTokens(payload);
+    const accessToken = await this.jwtTokenAdapter.createToken(
+      payload,
+      this.envConfig.getJwtAccessSecret(),
+      this.envConfig.getJwtAccessExpirationTime(),
+    );
+    const refreshToken = await this.jwtTokenAdapter.createToken(
+      payload,
+      this.envConfig.getJwtRefreshSecret(),
+      this.envConfig.getJwtRefreshExpirationTime(),
+    );
 
     const updatedUser = await this.userRepository.updateById(user._id, {
-      accessToken: access.token,
-      refreshToken: refresh.token,
+      accessToken,
+      refreshToken,
     });
 
     return updatedUser;
@@ -125,5 +144,54 @@ export class UserServise {
     });
 
     return { message: 'Logout success' };
+  }
+
+  async refreshUser(refreshToken: string) {
+    try {
+      const result = await this.jwtTokenAdapter.verifyToken(
+        refreshToken,
+        this.envConfig.getJwtRefreshSecret(),
+      );
+      if (!result) {
+        this.exceptionsService.UNAUTHORIZED_EXCEPTION({
+          message: 'token invalid',
+        });
+      }
+      if (result.payload.id) {
+        const user = await this.userRepository.getUserByToken(refreshToken);
+        if (!user || user._id.toString() !== result.payload.id) {
+          throw this.exceptionsService.FORBIDDEN_EXCEPTION({
+            status: 'Failed',
+            message: 'User not found, refresh token invalid',
+            statusCode: 404,
+          });
+        }
+
+        const newAccessToken = this.jwtTokenAdapter.createToken(
+          { id: result.payload.id, email: result.payload.email },
+          this.envConfig.getJwtAccessSecret(),
+          this.envConfig.getJwtAccessExpirationTime(),
+        );
+        const newRefreshToken = this.jwtTokenAdapter.createToken(
+          { id: result.payload.id, email: result.payload.email },
+          this.envConfig.getJwtRefreshSecret(),
+          this.envConfig.getJwtRefreshExpirationTime(),
+        );
+
+        await this.userRepository.updateById(user._id, {
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        });
+        return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+      } else {
+        throw this.exceptionsService.FORBIDDEN_EXCEPTION({
+          status: 'Failed',
+          message: 'Refresh token invalid',
+          statusCode: 403,
+        });
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }

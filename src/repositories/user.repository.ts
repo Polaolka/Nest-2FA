@@ -20,6 +20,14 @@ export class UserRepository {
     return user;
   }
 
+  // ---- GET USER BY REFRESHTOKEN ----
+  async getUserByToken(refreshToken: string): Promise<UserResponse> {
+    const user = await this.userModel.findOne({
+      refreshToken,
+    });
+    return user;
+  }
+
   // ---- GET USER BY ID ----
   async getUserById(id: string): Promise<UserResponse> {
     const user = await this.userModel.findById(id);

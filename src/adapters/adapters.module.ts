@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BcryptAdapter } from './bcrypt.adapter';
 import { JwtTokenAdapter } from './jwt.adapter';
 import { JwtService } from '@nestjs/jwt';
-import { EnvConfigModule } from 'src/config/config.module';
+import { EnvConfigModule } from 'src/config/env/config.module';
 @Module({
   imports: [EnvConfigModule],
   providers: [BcryptAdapter, JwtTokenAdapter, JwtService],

@@ -3,13 +3,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ControllersModule } from './controllers/controllers.module';
 import { ServicesModule } from './services/services.module';
 import { RepositoriesModule } from './repositories/repositories.module';
-import { EnvConfigModule } from './config/config.module';
+import { EnvConfigModule } from './config/env/config.module';
 import { ExceptionsModule } from './common/exceptions/exceptions.module';
 import { JwtUserMiddleware } from './middlewares/jwt-user.middleware/jwt-user.middleware';
 import { LoggerModule } from './common/logger/logger.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ValidationPipe } from './common/pipes/Validation.pipe';
 import { AdaptersModule } from './adapters/adapters.module';
+import { SwaggerModule } from '@nestjs/swagger';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AdaptersModule } from './adapters/adapters.module';
     ExceptionsModule,
     LoggerModule,
     AdaptersModule,
+    SwaggerModule,
   ],
   controllers: [],
   providers: [

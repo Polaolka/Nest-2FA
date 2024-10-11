@@ -36,3 +36,10 @@ export class LogoutUserDto {
   @IsString()
   _id: string;
 }
+
+export class RefresUserDto {
+  @ApiProperty({ example: 'refreshToken', description: 'user refreshToken' })
+  @IsNotEmpty()
+  @IsString()
+  readonly refreshToken: string;
+}

@@ -1,8 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserServise } from 'src/services/user.service';
-import { CreateUserDto, LoginUserDto } from './auth.dto';
-import { AuthLoginPresenter, UserLogoutRespDto } from './user.presenter';
+import { CreateUserDto, LoginUserDto, RefresUserDto } from './auth.dto';
+import {
+  AuthLoginPresenter,
+  UserLogoutPresenter,
+  UserRefreshPresenter,
+} from './user.presenter';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('User controller')
 @Controller('auth')
@@ -17,6 +22,7 @@ export class AuthController {
   }
 
   // ---- LOGIN USER ----
+  @HttpCode(200)
   @ApiResponse({ status: 200, type: AuthLoginPresenter })
   @ApiOperation({ summary: 'User login' })
   @Post('login')
@@ -25,10 +31,21 @@ export class AuthController {
   }
 
   // ---- LOGOUT USER ----
-  @ApiResponse({ status: 200, type: UserLogoutRespDto })
+  @HttpCode(200)
+  @ApiResponse({ status: 200, type: UserLogoutPresenter })
   @ApiOperation({ summary: 'User logout' })
   @Post('logout')
   async logout(@Body() _id: string) {
     return this.userService.logout(_id);
+  }
+
+  // ---- REFRESH USER----
+  @Public()
+  // @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Refresh users' })
+  @ApiResponse({ status: 200, type: UserRefreshPresenter })
+  @Post('/refresh')
+  refreshUser(@Body() refresUserDto: RefresUserDto) {
+    return this.userService.refreshUser(refresUserDto.refreshToken);
   }
 }
