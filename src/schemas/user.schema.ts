@@ -25,6 +25,12 @@ export class User {
 
   @Prop({ default: '' })
   recoveryCode: string;
+
+  @Prop({ default: '' })
+  tempTwoFactorSecret: string;
+
+  @Prop({ default: '' })
+  twoFactorSecret: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

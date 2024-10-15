@@ -5,10 +5,11 @@ import { EnvConfigService } from 'src/config/env/env-config.service';
 import { ExceptionsService } from 'src/common/exceptions/exceptions.service';
 import { LoggerModule } from 'src/common/logger/logger.module';
 import { AdaptersModule } from 'src/adapters/adapters.module';
+import { MfaService } from './mfa.service';
 
 @Module({
   imports: [RepositoriesModule, LoggerModule, AdaptersModule],
-  providers: [UserServise, EnvConfigService, ExceptionsService],
-  exports: [UserServise],
+  providers: [UserServise, EnvConfigService, ExceptionsService, MfaService],
+  exports: [UserServise, MfaService],
 })
 export class ServicesModule {}

@@ -41,11 +41,19 @@ export class AuthController {
 
   // ---- REFRESH USER----
   @Public()
-  // @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Refresh users' })
   @ApiResponse({ status: 200, type: UserRefreshPresenter })
   @Post('/refresh')
   refreshUser(@Body() refresUserDto: RefresUserDto) {
+    return this.userService.refreshUser(refresUserDto.refreshToken);
+  }
+
+  // ---- LOGIN 2FA USER----
+  @Public()
+  @ApiOperation({ summary: 'Refresh users' })
+  @ApiResponse({ status: 200, type: UserRefreshPresenter })
+  @Post('/refresh')
+  login2FA(@Body() refresUserDto: RefresUserDto) {
     return this.userService.refreshUser(refresUserDto.refreshToken);
   }
 }

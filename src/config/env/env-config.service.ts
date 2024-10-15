@@ -22,4 +22,7 @@ export class EnvConfigService {
   getJwtSalt(): string {
     return this.configService.get<string>('JWT_SALT');
   }
+  getMfaSecret(): string {
+    return this.configService.get<string>('JWT_MFA_SECRET');
+  }
 }
