@@ -24,13 +24,13 @@ export class User {
   isMfaEnable: boolean;
 
   @Prop({ default: '' })
-  recoveryCode: string;
-
-  @Prop({ default: '' })
   tempTwoFactorSecret: string;
 
   @Prop({ default: '' })
   twoFactorSecret: string;
+
+  @Prop({ default: [] })
+  recoveryCodes: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

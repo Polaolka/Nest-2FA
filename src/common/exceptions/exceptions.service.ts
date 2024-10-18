@@ -12,6 +12,7 @@ interface FormatExceptionMessage {
   status?: 'Failed';
   message: string;
   statusCode?: number;
+  data?: string;
 }
 interface Exceptions {
   BAD_REQUEST_EXCEPTION(data: FormatExceptionMessage): void;

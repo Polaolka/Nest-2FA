@@ -43,3 +43,23 @@ export class RefresUserDto {
   @IsString()
   readonly refreshToken: string;
 }
+
+export class LoginMfaDto {
+  @ApiProperty({
+    example: '123456',
+    description: 'user mfa code from autenicator',
+  })
+  @IsNotEmpty()
+  @IsString()
+  code: string;
+}
+
+export class LoginRecoveryCodeDto {
+  @ApiProperty({
+    example: '123456',
+    description: 'user recovery code',
+  })
+  @IsNotEmpty()
+  @IsString()
+  recoveryCode: string;
+}

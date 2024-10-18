@@ -25,4 +25,10 @@ export class EnvConfigService {
   getMfaSecret(): string {
     return this.configService.get<string>('JWT_MFA_SECRET');
   }
+  getMfaExpirationTime(): string {
+    return this.configService.get<string>('JWT_MFA_EXPIRATION_TIME');
+  }
+  getMfaCodeSecret(): string {
+    return this.configService.get<string>('JWT_MFA_CODE_SECRET');
+  }
 }

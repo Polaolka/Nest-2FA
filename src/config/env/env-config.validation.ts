@@ -16,11 +16,15 @@ class EnvironmentVariables {
   JWT_REFRESH_SECRET: string;
   @IsString()
   JWT_MFA_SECRET: string;
+  @IsString()
+  JWT_MFA_CODE_SECRET: string;
 
   @IsString()
   JWT_ACCESS_EXPIRATION_TIME: string;
   @IsString()
   JWT_REFRESH_EXPIRATION_TIME: string;
+  @IsString()
+  JWT_MFA_EXPIRATION_TIME: string;
   @IsString()
   JWT_SALT: string;
   // DATABASE

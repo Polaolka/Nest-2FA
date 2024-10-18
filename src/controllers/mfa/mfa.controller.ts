@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Param } from '@nestjs/common';
 
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
@@ -21,13 +21,22 @@ export class MfaController {
   }
 
   // ACTIVATE 2FA
-  @Post('verify')
+  // @Post('verify')
+  // @UseGuards(JwtAuthGuard)
+  // async verify2FA(
+  //   @Req() request: ExtendedRequest,
+  //   @Body() body: { token: string },
+  // ) {
+  //   const user = request.user;
+  //   return this.mfaService.verify2FA(user, body.token);
+  // }
+
+  @Post('verify/:email')
   @UseGuards(JwtAuthGuard)
-  async verify2FA(
-    @Req() request: ExtendedRequest,
-    @Body() body: { token: string },
+  async turnOnMfa(
+    @Param('email') email: string,
+    @Body() body: { code: string },
   ) {
-    const user = request.user;
-    return this.mfaService.verify2FA(user, body.token);
+    return this.mfaService.updateMfa({ email, code: body.code });
   }
 }

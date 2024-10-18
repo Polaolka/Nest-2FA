@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserServise } from './user.service';
+import { AuthServise } from './auth.service';
 import { RepositoriesModule } from 'src/repositories/repositories.module';
 import { EnvConfigService } from 'src/config/env/env-config.service';
 import { ExceptionsService } from 'src/common/exceptions/exceptions.service';
@@ -9,7 +9,7 @@ import { MfaService } from './mfa.service';
 
 @Module({
   imports: [RepositoriesModule, LoggerModule, AdaptersModule],
-  providers: [UserServise, EnvConfigService, ExceptionsService, MfaService],
-  exports: [UserServise, MfaService],
+  providers: [AuthServise, EnvConfigService, ExceptionsService, MfaService],
+  exports: [AuthServise, MfaService],
 })
 export class ServicesModule {}
